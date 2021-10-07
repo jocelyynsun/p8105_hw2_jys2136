@@ -5,13 +5,87 @@ date: "10/7/2021"
 output: github_document
 ---
 
-We will be using the following libraries for this assignment:
+We will be using the following packages for this assignment:
 
-```{r, loading libraries, message = FALSE}
+```{r, loading packages, message = FALSE}
 
 library(tidyverse)
-library(dplyr)
 library(readxl)
 
 ```
+
+# Problem 1
+
+## Mr. Trash Wheel
+
+### Importing and Cleaning Mr. Trash Wheel
+```{r, mr_trash_wheel, message = FALSE}
+
+trash_df = 
+  read_excel("data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+              sheet = "Mr. Trash Wheel",
+              skip = 1) %>%
+  janitor::clean_names() %>%
+  select("dumpster":"homes_powered") %>%
+  drop_na("dumpster") %>%
+  mutate(sports_balls = round(sports_balls, digits = 0))
+
+```
+
+### Precipitation Data
+
+```{r}
+#Importing & cleaning 2018 Precipitation Data:
+
+precip_2018 = 
+  read_excel("data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+              sheet = "2018 Precipitation",
+              skip = 1) %>%
+  janitor::clean_names() %>%
+  drop_na("month") %>%
+  mutate(year = 2018)
+
+  
+#Importing & cleaning 2019 Precipitation Data:
+
+precip_2019 = 
+  read_excel("data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+              sheet = "2019 Precipitation",
+              skip = 1) %>%
+  janitor::clean_names() %>%
+  drop_na(c("month", "total")) %>%
+  mutate(year = 2019)
+
+```
+
+
+### Combining Precipitation Data
+```{r}
+
+precip_all = 
+  bind_rows(precip_2018, precip_2019) %>%
+  mutate(month = month.name[as.numeric(month)])
+
+```
+
+
+# FiveThirtyEight Data
+```{r}
+
+politicians_df =
+  read_csv("data/fivethirtyeight_datasets/pols-month.csv") %>%
+  separate("mon", into = c("year", "month", "day")) %>%
+  mutate(
+    month = month.name[as.numeric(month)],
+    president = recode(prez_dem, "0" = "republican", "1" = "democrat")) %>%
+  select(-day, -prez_dem, -prez_gop)
+```
+
+
+
+
+
+
+
+
 
