@@ -1,0 +1,17 @@
+---
+title: "p8105_hw2_jys2136"
+author: "Jocelyn Sun"
+date: "10/7/2021"
+output: github_document
+---
+
+We will be using the following libraries for this assignment:
+
+```{r, loading libraries, message = FALSE}
+
+library(tidyverse)
+library(dplyr)
+library(readxl)
+
+```
+
