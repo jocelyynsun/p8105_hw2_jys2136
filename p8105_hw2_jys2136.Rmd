@@ -6,8 +6,7 @@ output: github_document
 ---
 
 We will be using the following packages for this assignment:
-
-```{r, loading packages, message = FALSE}
+```{r, loading_packages, message = FALSE}
 
 library(tidyverse)
 library(readxl)
@@ -32,8 +31,8 @@ trash_df =
 
 ```
 
-### Precipitation Data
 
+### Precipitation Data
 ```{r, precipitation, message = FALSE}
 #Importing & cleaning 2018 Precipitation Data:
 
@@ -60,7 +59,7 @@ precip_2019 =
 
 
 ### Combining Precipitation Data
-```{r, combining precipitation, message = FALSE}
+```{r, combining_precipitation, message = FALSE}
 
 precip_all = 
   bind_rows(precip_2018, precip_2019) %>%
@@ -74,21 +73,22 @@ precip_all =
 ## FiveThirtyEight Data
 
 ### Politicians Dataset
-```{r, politicians, message = FALSE}
+```{r, politicians_data, message = FALSE}
 
 politicians_df =
   read_csv("data/fivethirtyeight_datasets/pols-month.csv") %>%
   separate("mon", into = c("year", "month", "day")) %>%
   mutate(
     month = month.name[as.numeric(month)],
+    year = as.numeric(year),
     president = recode(prez_dem, "0" = "gop", "1" = "dem")) %>%
   select(-day, -prez_dem, -prez_gop)
 
 ```
 
 
-### snp Dataset
-```{r, snp data, message = FALSE}
+### S&P Dataset
+```{r, snp_data, message = FALSE}
 
 snp_df = 
   read_csv("data/fivethirtyeight_datasets/snp.csv") %>%
@@ -105,13 +105,39 @@ snp_df =
 
 
 ### Unemployment Dataset
-```{r, unemployment data, message = FALSE}
+```{r, unemployment_data, message = FALSE}
 
 unemploy_df = 
   read_csv("data/fivethirtyeight_datasets/unemployment.csv") %>%
+  rename(
+    "January" = "Jan", 
+    "February" = "Feb", 
+    "March" = "Mar",
+    "April" = "Apr",
+    "June" = "Jun",
+    "July" = "Jul",
+    "August" = "Aug",
+    "September" = "Sep",
+    "October" = "Oct",
+    "November" = "Nov",
+    "December" = "Dec") %>%
+  pivot_longer(
+    "January":"December",
+    names_to = "month",
+    values_to = "umemployment") %>%
   janitor::clean_names()
 
 ```
+
+### Combining FiveThirtyEight Data
+```{r, merging_FiveThirtyEight_data, message = FALSE}
+
+combined_df = 
+  left_join(politicians_df, snp_df, unemploy_df, 
+            by = c("year","month"))
+
+```
+
 
 
 # Problem 3
