@@ -67,6 +67,10 @@ precip_all =
 
 ```
 
+The Mr. Trash Wheel dataset has `r ncol(trash_df)` variables and `r nrow(trash_df)` observations. The median number of sports calls in a dumpster in 2910 was `r trash_df %>% filter(year == 2019) %>% pull(sports_balls) %>% median()`. The data set also includes information on the amount of litter (indicated by `weight` and `volume`) and the type of litter collected by each dumpter (indicated by `sports_balls`, `cigarette_butts`, `glass_bottles`, `plastic_bottles`, `chip_bags`, `grocery_bags` and `polystyrene`).
+
+The combined precipitation data has `r ncol(precip_all)` variables and `r nrow(precip_all)` observations. There was missing data in the raw datasets used to create the `precip_all` dataset. After cleaning the data, and based on the available data that we collected, the total precipitation in 2018 was `r precip_all %>% filter(year==2018) %>% pull(total) %>% sum()` (inches).
+
 
 # Problem 2
 
@@ -138,10 +142,16 @@ combined_df =
 
 ```
 
+The politicians data includes `r ncol(politicians_df)` variables and `r nrow(politicians_df)` observations. The data shows the number of politicians, either `dem` or `gop` between the years `r min(politicians_df$year)` and `r max(politicians_df$year)`.
+
+The S&P data includes `r ncol(snp_df)` variables and `r nrow(snp_df)` observations.
+
+The unemployment data includes `r ncol(unemploy_df)` variables and `r nrow(unemploy_df)` observations.
 
 
 # Problem 3
 
+## Baby Names
 ```{r, baby_names, message = FALSE}
 
 baby_names_df = 
@@ -163,7 +173,7 @@ baby_names_df =
 
 ```
 
-
+## Popularity of the name 'Olivia'
 ```{r, olivia, echo = TRUE, message = FALSE}
 
 olivia_df = 
@@ -178,7 +188,7 @@ knitr::kable(olivia_df, caption = "Table 1: Popularity of the name 'Olivia' over
 ```
 
 
-
+## Popularity of Male Names Over Time
 ```{r, male_names, echo = TRUE, message = FALSE}
 
 males_df = 
@@ -201,6 +211,8 @@ male_names = (filter(baby_names_df, gender == "male", ethnicity == "white non hi
 ggplot(male_names, aes(x = rank, y = count)) + 
   geom_point() + 
   ggtitle("Number of baby names among White, Non-Hispanic, males born in NYC by rank of name popularity (2016)")
+
+ggsave("male_names_scatter.pdf")
 
 ```
 
