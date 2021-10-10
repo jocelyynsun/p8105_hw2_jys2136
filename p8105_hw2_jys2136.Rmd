@@ -142,13 +142,54 @@ combined_df =
 
 # Problem 3
 
-```{r}
+```{r, baby_names, message = FALSE}
+
+baby_names_df = 
+  read_csv("data/Popular_Baby_Names.csv") %>%
+  janitor::clean_names() %>%
+  rename(
+    "name" = "childs_first_name",
+    "year" = "year_of_birth") %>%
+  mutate(
+    gender = tolower(gender),
+    ethnicity = tolower(ethnicity),
+    ethnicity = recode(ethnicity, 
+                      "asian and paci" = "asian and pacific islander",
+                      "black non hisp" = "black non hispanic",
+                      "white non hisp" = "white non hispanic"),
+    name = tolower(name)) %>%
+  distinct()
 
 
 ```
 
 
+```{r, olivia, echo = TRUE, message = FALSE}
 
+olivia_df = 
+  filter(baby_names_df, name == "olivia") %>%
+  select(-c(gender, name, count)) %>%
+  pivot_wider(
+    names_from = year,
+    values_from = rank)
+
+knitr::kable(olivia_df)
+
+```
+
+
+```{r, male_names, echo = TRUE, message = FALSE}
+
+males_df = 
+  filter(baby_names_df, gender == "male" & rank == 1) %>%
+  select(-c(gender, count, rank)) %>%
+  pivot_wider(
+    names_from = year,
+    values_from = name)
+
+knitr::kable(males_df)
+
+```
 
 
 
