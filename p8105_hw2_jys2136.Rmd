@@ -34,7 +34,7 @@ trash_df =
 
 ### Precipitation Data
 
-```{r}
+```{r, precipitation, message = FALSE}
 #Importing & cleaning 2018 Precipitation Data:
 
 precip_2018 = 
@@ -60,7 +60,7 @@ precip_2019 =
 
 
 ### Combining Precipitation Data
-```{r}
+```{r, combining precipitation, message = FALSE}
 
 precip_all = 
   bind_rows(precip_2018, precip_2019) %>%
@@ -69,18 +69,57 @@ precip_all =
 ```
 
 
-# FiveThirtyEight Data
-```{r}
+# Problem 2
+
+## FiveThirtyEight Data
+
+### Politicians Dataset
+```{r, politicians, message = FALSE}
 
 politicians_df =
   read_csv("data/fivethirtyeight_datasets/pols-month.csv") %>%
   separate("mon", into = c("year", "month", "day")) %>%
   mutate(
     month = month.name[as.numeric(month)],
-    president = recode(prez_dem, "0" = "republican", "1" = "democrat")) %>%
+    president = recode(prez_dem, "0" = "gop", "1" = "dem")) %>%
   select(-day, -prez_dem, -prez_gop)
+
 ```
 
+
+### snp Dataset
+```{r, snp data, message = FALSE}
+
+snp_df = 
+  read_csv("data/fivethirtyeight_datasets/snp.csv") %>%
+  separate("date", into = c("month", "day", "year")) %>%
+  mutate(
+    month = month.name[as.numeric(month)],
+    year = as.numeric(year),
+    year = if_else(year <= 15, year + 2000, year + 1900),
+    day = as.numeric(day)
+  ) %>%
+  select(year, month, close)
+  
+```
+
+
+### Unemployment Dataset
+```{r, unemployment data, message = FALSE}
+
+unemploy_df = 
+  read_csv("data/fivethirtyeight_datasets/unemployment.csv") %>%
+  janitor::clean_names()
+
+```
+
+
+# Problem 3
+
+```{r}
+
+
+```
 
 
 
